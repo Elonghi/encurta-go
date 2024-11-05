@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/elonghi/encurtago/internal/requests"
 	"github.com/elonghi/encurtago/internal/responses"
@@ -20,8 +21,8 @@ func NewLinkController(linkService *service.LinkService) *LinkController {
 }
 
 func (LinkController) Index(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Hello World",
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"APP_URL": os.Getenv("APP_URL"),
 	})
 }
 

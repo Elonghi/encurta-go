@@ -112,7 +112,7 @@
                 }
 
                 // Substitua 'https://suaapi.com/encurtar' pela URL real da sua API
-                fetch('http://localhost:8080/api/encurtar/', {
+                fetch({{ .APP_URL}}+ 'api/encurtar/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -122,8 +122,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        shortUrlLink.href = "http://localhost:8080/" + data.shorten_url.short_url;
-                        shortUrlLink.textContent = "http://localhost:8080/" + data.shorten_url.short_url;
+                        shortUrlLink.href = {{ .APP_URL}} + data.shorten_url.short_url;
+                        shortUrlLink.textContent = {{ .APP_URL}} + data.shorten_url.short_url;
                         resultDiv.style.display = 'block';
 
                         if (generateQr) {

@@ -23,6 +23,7 @@ func main() {
 	linkController := controller.NewLinkController(userService)
 
 	router := gin.Default()
+	router.LoadHTMLGlob("./internal/templates/*")
 
 	config := cors.Config{
 		AllowAllOrigins:  true,
