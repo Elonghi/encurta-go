@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/elonghi/encurtago/internal/controller"
-	"github.com/elonghi/encurtago/internal/infrastructure/caching"
 	"github.com/elonghi/encurtago/internal/infrastructure/database"
 	"github.com/elonghi/encurtago/internal/repository"
 	"github.com/elonghi/encurtago/internal/routes"
@@ -17,10 +16,9 @@ import (
 
 func main() {
 	database.Connect()
-	caching.StartRedis()
 	godotenv.Load()
 
-	linkRepo := repository.NewLinkRepository(database.DB, caching.RedisClient)
+	linkRepo := repository.NewLinkRepository(database.DB)
 	userService := service.NewLinkService(linkRepo)
 	linkController := controller.NewLinkController(userService)
 

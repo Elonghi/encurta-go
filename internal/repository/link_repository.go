@@ -2,13 +2,11 @@ package repository
 
 import (
 	"github.com/elonghi/encurtago/internal/domain"
-	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )
 
 type linkRepository struct {
-	db    *gorm.DB
-	redis *redis.Client
+	db *gorm.DB
 }
 
 type LinkRepository interface {
@@ -17,13 +15,11 @@ type LinkRepository interface {
 	FindByShortURL(shortURL string) (domain.Link, error)
 	FindByUrl(url string) (domain.Link, error)
 	Create(link domain.Link) (domain.Link, error)
-	SetCache(key string, value string) error
-	GetCache(key string) (string, error)
 	Update(link domain.Link) (domain.Link, error)
 }
 
-func NewLinkRepository(db *gorm.DB, redis *redis.Client) LinkRepository {
-	return &linkRepository{db: db, redis: redis}
+func NewLinkRepository(db *gorm.DB) LinkRepository {
+	return &linkRepository{db: db}
 }
 
 func (r *linkRepository) Update(link domain.Link) (domain.Link, error) {
@@ -58,12 +54,4 @@ func (r *linkRepository) FindByUrl(url string) (domain.Link, error) {
 	var link domain.Link
 	result := r.db.Where("url = ?", url).First(&link)
 	return link, result.Error
-}
-
-func (r *linkRepository) SetCache(key string, value string) error {
-	return r.redis.Set(r.redis.Context(), key, value, 0).Err()
-}
-
-func (r *linkRepository) GetCache(key string) (string, error) {
-	return r.redis.Get(r.redis.Context(), key).Result()
 }

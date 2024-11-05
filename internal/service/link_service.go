@@ -74,21 +74,11 @@ func (s *LinkService) ShortenURL(req requests.LinkRequest) (domain.Link, error) 
 
 	log.Printf("Novo link criado: %+v", createdLink)
 
-	// Armazena no cache para acessos futuros rápidos.
-	if err := s.linkRepo.SetCache(req.URL, createdLink.ShortURL); err != nil {
-		return domain.Link{}, err
-	}
-
 	return createdLink, nil
 }
 
 // UnshortenURL expande uma URL curta para sua URL original.
 func (s *LinkService) UnshortenURL(shortURL string) (string, error) {
-	// Tenta obter a URL original a partir do cache.
-	cachedURL, err := s.linkRepo.GetCache(shortURL)
-	if err == nil && cachedURL != "" {
-		return cachedURL, nil
-	}
 
 	// Se não estiver no cache, busca no repositório.
 	link, err := s.linkRepo.FindByShortURL(shortURL)
