@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"time"
 
 	"github.com/elonghi/encurtago/internal/controller"
@@ -11,11 +12,13 @@ import (
 	"github.com/elonghi/encurtago/internal/service"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	database.Connect()
 	caching.StartRedis()
+	godotenv.Load()
 
 	linkRepo := repository.NewLinkRepository(database.DB, caching.RedisClient)
 	userService := service.NewLinkService(linkRepo)
@@ -36,5 +39,5 @@ func main() {
 
 	routes.InitializeRoutes(router, linkController)
 
-	router.Run(":8080")
+	router.Run(os.Getenv("PORT"))
 }
